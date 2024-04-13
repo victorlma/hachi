@@ -2,12 +2,9 @@
 #include "ncurses.h"
 
 #include "hachi.h"
+#include "ncur_layer.h"
+#include "x11_layer.h"
 #include "hachi.c"
-
-void fetchIns();
-void decodeIns();
-void executeIns();
-
 
 int main(int argc, char **argv)
 {
@@ -16,13 +13,8 @@ int main(int argc, char **argv)
 
     setuphachi();
 
-    initscr();
-    cbreak();
-    noecho();
-    intrflush(stdscr, FALSE);
-    keypad(stdscr, TRUE);
 
-    while (!state.close) {
+    while (!Hachi.close) {
 
         fetchIns();
         decodeIns();
