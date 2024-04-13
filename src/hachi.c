@@ -1,4 +1,6 @@
 #include "hachi.h"
+#include "ncur_layer.h"
+#include "x11_layer.h"
 
 char FONT_TABLE[16*5] = {
 0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
@@ -34,4 +36,18 @@ void setuphachi()
         ++c;
     }
 
+    switch (Hachi.backend) {
+        case NCUR: ncur_setupkeys();
+                   break;
+        case X11_GL: x11_setupkeys();
+                   break;
+
+        case BACKEND_COUNT: break;
+    }
+}
+
+short int fetchIns()
+{
+    short int ins = 0 | (Hachi.mem[Hachi.pc++] << 8) | (Hachi.mem[Hachi.pc++]);
+    return ins;
 }

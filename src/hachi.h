@@ -3,6 +3,8 @@
 
 typedef int b32;
 
+typedef enum { NCUR, X11_GL, BACKEND_COUNT} HACHI_BACKEND;
+
 
 typedef struct
 {
@@ -12,6 +14,7 @@ typedef struct
 
 typedef struct
 {
+    hachiBtn  b0;
     hachiBtn  b1;
     hachiBtn  b2;
     hachiBtn  b3;
@@ -32,6 +35,7 @@ typedef struct
 
 typedef struct
 {
+    HACHI_BACKEND  backend;
     b32     close;
 
     char    mem[4096];  // 4kb memory:  4k = 4096
@@ -42,12 +46,16 @@ typedef struct
     
     short int ireg;     // 16-bit index register called “I” which is used to point at locations in memory
     short int *instack; // A stack for 16-bit addresses, which is used to call subroutines/functions and return from them
-    char *pc;           // A program counter, often called just “PC”, which points at the current instruction in memory
+    int  pc;           // A program counter, often called just “PC”, which points at the current instruction in memory
 
     hachiKeypad  k;
 
 } hachiChip;
 
 void setuphachi();
+
+short int fetchIns();
+void decodeIns();
+void executeIns();
 
 #endif
