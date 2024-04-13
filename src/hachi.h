@@ -47,4 +47,7 @@ typedef struct
     hachiKeypad  k;
 
 } hachiChip;
+
+void setuphachi();
+
 #endif
