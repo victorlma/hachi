@@ -1,6 +1,7 @@
 #include "ncurses.h"
 #include "ncur_layer.h"
 
+
 void ncur_setupkeys()
 { 
     Hachi.k.b0.key = '1' ;
@@ -19,4 +20,63 @@ void ncur_setupkeys()
     Hachi.k.bd.key = 'x' ;
     Hachi.k.be.key = 'c' ;
     Hachi.k.bf.key = 'v' ;
+}
+
+void ncur_setupscreen()
+{
+    initscr();
+    noecho();
+    raw();
+
+}
+
+b32 checkScrSize()
+{
+
+    int w;
+    int h;
+    getmaxyx(stdscr, h, w);
+    int centery = h/2;
+    int centerx = w/2;
+
+    if (w < dpy_w || h < dpy_h)
+    {
+        clear();
+        mvprintw(0+centery,0+centerx-7, "min size: %dx%d",dpy_w,dpy_h);
+        return FALSE;
+    }
+    return TRUE;
+
+}
+void ncur_draw()
+{
+    if (checkScrSize())
+    {
+        clear();
+        int y = 0;
+        int x = 0;
+
+        int c = 0;
+        for (int dpybyte=0; dpybyte < dpy_wb* dpy_hb; ++dpybyte)
+        {
+            unsigned char curbyte = Hachi.dpy[dpybyte];
+
+            for (int i=0; i < 8; ++i)
+            {
+                if (curbyte & (1 << i))
+                {
+                    mvprintw(y,x,"%c",'#');
+                }
+                ++x;
+            }
+
+            ++c;
+            if (c < 7) c=0, ++y;
+        }
+    }
+}
+
+void ncur_clear()
+{
+    clear();
 }
