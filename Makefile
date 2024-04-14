@@ -11,8 +11,6 @@ HEADERS=$(wildcard $(SRCDIR)/*.h))
 .PHONY: debug release docs clean $(HEADERS)
 
 debug: $(BINPATH)-debug
-	cp $(BINPATH)-debug tst/
-	cd tst
 	@gdb ./$<
 
 release: $(BINPATH)-release $(HEADERS)
