@@ -97,7 +97,7 @@ void decodeAndExec(unsigned short int ins)
         case 0x7000:
             {
                 char ind = 0 | ((ins & (0x0F00)) >> 8);
-                Hachi.vreg[ind] = Hachi.vreg[ind] == 255 ? 255 : Hachi.vreg[ind] + (ins & (0x00FF));
+                Hachi.vreg[ind] += (ins & (0x00FF));
             }
             break;
 
@@ -124,45 +124,44 @@ void decodeAndExec(unsigned short int ins)
                 unsigned char inx = 0 | ((ins & (0x0F00)) >> 8);
                 unsigned char iny = 0 | ((ins & (0x00F0)) >> 4);
 
-                unsigned char x = Hachi.vreg[inx] & dpy_w;
-                unsigned char y = Hachi.vreg[iny] & dpy_h;
+                unsigned char x = Hachi.vreg[inx] & dpy_w-1;
+                unsigned char y = Hachi.vreg[iny] & dpy_h-1;
 
                 unsigned char sprsize = 0 | ((ins & (0x000F)));
 
-                unsigned char xbyteindex = x/8;
-                unsigned char xbitindex = x - (xbyteindex * 8);
 
-                for (int i=0; i < sprsize; ++i)
-                {
-                    unsigned char sprbyte = Hachi.mem[Hachi.ireg +(i*8)];
 
-                    unsigned char nbyteindex = xbyteindex;
-                    unsigned char nbitindex = xbitindex;
+                for (int i=0; i < sprsize; ++i) {
+                    unsigned char sprb = Hachi.mem[Hachi.ireg+i];
 
-                    for (int sprb = 0; sprb < 8; ++sprb)
+                    unsigned char xbyteindex = x/8;
+                    unsigned char xbitindex = x - (xbyteindex * 8);
+
+                    unsigned char bitspraux = 0;
+
+                    for (int byteinspr = 0; byteinspr < 8; ++byteinspr)
                     {
+                        if ((xbitindex + bitspraux) > 7)
+                        {
+                            xbitindex = 0;
+                            xbyteindex += 1;
+                            bitspraux = 0;
+                        }
+                        unsigned char *dpybyte = &Hachi.dpy[((y+i)*dpy_wb) + xbyteindex];
 
-                        if (sprbyte & (0x80 >> sprb)) {
-                            
-                            Hachi.dpy[(y*dpy_wb)+nbyteindex] ^= (1 << nbitindex); 
+                        if (sprb & ( 0x80 >> byteinspr))
+                        {
+                            *dpybyte ^= (0x80 >> (xbitindex + bitspraux));
 
-                            if (Hachi.dpy[(y*dpy_wb)+nbyteindex] & (0 << nbitindex))
+                            if (!(*dpybyte & (0x80 >> (xbitindex + bitspraux))))
                             {
                                 Hachi.vreg[15] = 1;
-
                             }
-                            
                         }
-                        nbitindex++;
-                        if (nbitindex > 7) nbitindex = 0, nbyteindex++;
+                        bitspraux++;
                     }
-                    y++;
-                    if (y > dpy_h)
-                        break;
 
-                    
                 }
-
                 drawscreen();
             }
             break;
@@ -178,17 +177,9 @@ void decodeAndExec(unsigned short int ins)
 
 void clearscreen()
 {
-    switch (Hachi.backend)
+    for (int i=0; i < dpy_wb * dpy_hb; ++i)
     {
-        case NCUR:
-            ncur_clear();
-            break;
-
-        case X11_GL:
-              x11_clear();
-              break;
-        default:
-              break;
+        Hachi.dpy[i] = 0;
     }
 }
 

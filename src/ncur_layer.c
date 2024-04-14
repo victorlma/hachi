@@ -25,8 +25,6 @@ void ncur_setupkeys()
 void ncur_setupscreen()
 {
     initscr();
-    noecho();
-    raw();
 
 }
 
@@ -50,6 +48,7 @@ b32 checkScrSize()
 }
 void ncur_draw()
 {
+    clear();
     if (checkScrSize())
     {
         clear();
@@ -57,26 +56,28 @@ void ncur_draw()
         int x = 0;
 
         int c = 0;
-        for (int dpybyte=0; dpybyte < dpy_wb* dpy_hb; ++dpybyte)
+        for (int dpybyte=0; dpybyte < dpy_wb* dpy_h; ++dpybyte)
         {
             unsigned char curbyte = Hachi.dpy[dpybyte];
 
             for (int i=0; i < 8; ++i)
             {
-                if (curbyte & (1 << i))
+                if (curbyte & (0x80 >> i))
                 {
-                    mvprintw(y,x,"%c",'#');
+                    mvprintw(y,x,"%c",'@');
                 }
                 ++x;
             }
 
             ++c;
-            if (c < 7) c=0, ++y;
+            if (c > 7) 
+            {
+                c=0;
+                ++y;
+                x=0;
+            }
         }
     }
+    refresh();
 }
 
-void ncur_clear()
-{
-    clear();
-}

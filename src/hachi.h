@@ -51,7 +51,7 @@ typedef struct
     b32     close;
 
     unsigned char    mem[4096];  // 4kb memory:  4k = 4096
-    unsigned char    dpy[dpy_wb * dpy_hb];   // The display is 64 pixels wide and 32 pixels tall. Each pixel can be on or off. In other words, each pixel is a boolean value, or a bit. 64bit = 8 bytes
+    unsigned char    dpy[dpy_wb * dpy_h];   // The display is 64 pixels wide and 32 pixels tall. Each pixel can be on or off. In other words, each pixel is a boolean value, or a bit. 64bit = 8 bytes
     unsigned char    dtim;       // 8bit delay timer
     unsigned char    stim;       // 8bit sound timer
     unsigned char    vreg[16];   // 15 Variable Registers
