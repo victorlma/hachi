@@ -1,6 +1,7 @@
 #include "ncurses.h"
 #include "ncur_layer.h"
 
+char *blockUnicode = "\u2588";
 
 void ncur_setupkeys()
 { 
@@ -59,12 +60,11 @@ void ncur_draw()
         for (int dpybyte=0; dpybyte < dpy_wb* dpy_h; ++dpybyte)
         {
             unsigned char curbyte = Hachi.dpy[dpybyte];
-
             for (int i=0; i < 8; ++i)
             {
                 if (curbyte & (0x80 >> i))
                 {
-                    mvprintw(y,x,"%c",'@');
+                    mvaddstr(y,x,blockUnicode);
                 }
                 ++x;
             }
