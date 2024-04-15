@@ -1,7 +1,7 @@
 #include "ncurses.h"
 #include "ncur_layer.h"
 
-char *blockUnicode = "\u2588";
+char *blockUnicode = "@";
 
 void ncur_setupkeys()
 { 
