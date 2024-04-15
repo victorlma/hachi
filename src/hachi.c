@@ -164,7 +164,8 @@ void decodeAndExec(unsigned short int ins)
                         unsigned char x = ((ins & (0x0F00)) >> 8);
                         unsigned char y = ((ins & (0x00F0)) >> 4);
                         Hachi.vreg[x] += Hachi.vreg[y];
-                        if (Hachi.vreg[x] < Hachi.vreg[y]) Hachi.vreg[15] = 1;
+                        
+                        Hachi.vreg[15] = Hachi.vreg[x] < Hachi.vreg[y] ? 1 : 0;
                     }
                     break;
                 case 0x0005:
@@ -172,14 +173,10 @@ void decodeAndExec(unsigned short int ins)
                         unsigned char x = ((ins & (0x0F00)) >> 8);
                         unsigned char y = ((ins & (0x00F0)) >> 4);
 
-                        if (Hachi.vreg[x] > Hachi.vreg[y]) 
-                        {
-                            Hachi.vreg[15] = 1;
-                        } else {
-                            Hachi.vreg[15] = 0;
-                        }
 
+                        unsigned char tmp = Hachi.vreg[x];
                         Hachi.vreg[x] -= Hachi.vreg[y];
+                        Hachi.vreg[15] =  tmp > Hachi.vreg[y] ? 1 : 0;
 
                     }
                     break;
@@ -218,14 +215,10 @@ void decodeAndExec(unsigned short int ins)
                         unsigned char x = ((ins & (0x0F00)) >> 8);
                         unsigned char y = ((ins & (0x00F0)) >> 4);
 
-                        if (Hachi.vreg[x] < Hachi.vreg[y]) 
-                        {
-                            Hachi.vreg[15] = 1;
-                        } else {
-                            Hachi.vreg[15] = 0;
-                        }
+                        unsigned char tmp = Hachi.vreg[y];
+                        Hachi.vreg[x]= Hachi.vreg[y] - Hachi.vreg[x];
+                        Hachi.vreg[15] =  tmp > Hachi.vreg[x] ? 1 : 0;
 
-                         Hachi.vreg[x]= Hachi.vreg[y] - Hachi.vreg[x];
 
                     }
                     break;
