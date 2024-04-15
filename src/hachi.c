@@ -69,6 +69,10 @@ void decodeAndExec(unsigned short int ins)
 
         case 0x0000:
             if (ins == 0x00E0) clearscreen();
+            if (ins == 0x00EE) 
+            {
+                Hachi.pc = Hachi.stack[Hachi.stackCursor--];
+            }
             break;
 
         case 0x1000:
@@ -76,15 +80,37 @@ void decodeAndExec(unsigned short int ins)
             break;
 
         case 0x2000:
+            Hachi.stack[Hachi.stackCursor++] = Hachi.pc;
+            Hachi.pc = (ins & (0x0FFF));
             break;
 
         case 0x3000:
+            {
+                unsigned char x = ( ins & (0x0F00));
+                unsigned char nn = ( ins & (0x00FF));
+
+                if (Hachi.vreg[x] == nn) Hachi.pc += 2;
+            }
+
+            
             break;
 
         case 0x4000:
+            {
+                unsigned char x = ( ins & (0x0F00));
+                unsigned char nn = ( ins & (0x00FF));
+
+                if (Hachi.vreg[x] != nn) Hachi.pc += 2;
+            }
             break;
 
         case 0x5000:
+            {
+                unsigned char x = ( ins & (0x0F00));
+                unsigned char y = ( ins & (0x00F0));
+
+                if (Hachi.vreg[x] == Hachi.vreg[y]) Hachi.pc += 2;
+            }
             break;
 
         case 0x6000:
@@ -102,9 +128,144 @@ void decodeAndExec(unsigned short int ins)
             break;
 
         case 0x8000:
+            switch (ins & 0x000F)
+            {
+                case 0x0000:
+                    {
+                        unsigned char x = ( ins & (0x0F00));
+                        unsigned char y = ( ins & (0x00F0));
+                        Hachi.vreg[x] = Hachi.vreg[y];
+                    }
+                    break;
+                case 0x0001:
+                    {
+                        unsigned char x = ( ins & (0x0F00));
+                        unsigned char y = ( ins & (0x00F0));
+                        Hachi.vreg[x] |= Hachi.vreg[y];
+                    }
+                    break;
+                case 0x0002:
+                    {
+                        unsigned char x = ( ins & (0x0F00));
+                        unsigned char y = ( ins & (0x00F0));
+                        Hachi.vreg[x] &= Hachi.vreg[y];
+                    }
+                    break;
+                case 0x0003:
+                    {
+                        unsigned char x = ( ins & (0x0F00));
+                        unsigned char y = ( ins & (0x00F0));
+                        Hachi.vreg[x] ^= Hachi.vreg[y];
+                    }
+                    break;
+                case 0x0004:
+                    {
+                        unsigned char x = ( ins & (0x0F00));
+                        unsigned char y = ( ins & (0x00F0));
+                        Hachi.vreg[x] += Hachi.vreg[y];
+                        if (Hachi.vreg[x] < Hachi.vreg[y]) Hachi.vreg[15] = 1;
+                    }
+                    break;
+                case 0x0005:
+                    {
+                        unsigned char x = ( ins & (0x0F00));
+                        unsigned char y = ( ins & (0x00F0));
+
+                        if (Hachi.vreg[x] > Hachi.vreg[y]) 
+                        {
+                            Hachi.vreg[15] = 1;
+                        } else {
+                            Hachi.vreg[15] = 0;
+                        }
+
+                        Hachi.vreg[x] -= Hachi.vreg[y];
+
+                    }
+                    break;
+                case 0x0006:
+
+                    switch (Hachi.quirk) {
+                        case CHIP8:
+                        {
+                            unsigned char x = ( ins & (0x0F00));
+                            unsigned char y = ( ins & (0x00F0));
+
+                            Hachi.vreg[x] = Hachi.vreg[y];
+                            Hachi.vreg[15] = Hachi.vreg[x] & 1;
+                            Hachi.vreg[x] >>= 1;
+
+                        }
+                            break;
+                        case CHIP48:
+                        case SUPERCHIP:
+                        {
+                            unsigned char x = ( ins & (0x0F00));
+                            unsigned char y = ( ins & (0x00F0));
+
+                            Hachi.vreg[15] = Hachi.vreg[x] & 1;
+                            Hachi.vreg[x] >>= 1;
+
+                        }
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+
+                case 0x0007:
+                    {
+                        unsigned char x = ( ins & (0x0F00));
+                        unsigned char y = ( ins & (0x00F0));
+
+                        if (Hachi.vreg[x] < Hachi.vreg[y]) 
+                        {
+                            Hachi.vreg[15] = 1;
+                        } else {
+                            Hachi.vreg[15] = 0;
+                        }
+
+                         Hachi.vreg[x]= Hachi.vreg[y] - Hachi.vreg[x];
+
+                    }
+                    break;
+                case 0x000E:
+                    switch (Hachi.quirk) {
+                        case CHIP8:
+                        {
+                            unsigned char x = ( ins & (0x0F00));
+                            unsigned char y = ( ins & (0x00F0));
+
+                            Hachi.vreg[x] = Hachi.vreg[y];
+                            Hachi.vreg[15] = Hachi.vreg[x] & 0x80;
+                            Hachi.vreg[x] <<= 1;
+
+                        }
+                            break;
+                        case CHIP48:
+                        case SUPERCHIP:
+                        {
+                            unsigned char x = ( ins & (0x0F00));
+                            unsigned char y = ( ins & (0x00F0));
+
+                            Hachi.vreg[15] = Hachi.vreg[x] & 0x80;
+                            Hachi.vreg[x] <<= 1;
+
+                        }
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+            }
             break;
 
         case 0x9000:
+            {
+                unsigned char x = ( ins & (0x0F00));
+                unsigned char y = ( ins & (0x00F0));
+
+                if (Hachi.vreg[x] != Hachi.vreg[y]) Hachi.pc += 2;
+            }
             break;
 
         case 0xA000:

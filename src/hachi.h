@@ -9,6 +9,7 @@
 typedef int b32;
 
 typedef enum { NCUR, X11_GL, BACKEND_COUNT} HACHI_BACKEND;
+typedef enum { CHIP8, CHIP48, SUPERCHIP, QUIRK_COUNT} HACHI_QUIRK;
 
 
 typedef struct
@@ -48,6 +49,8 @@ typedef struct
 typedef struct
 {
     HACHI_BACKEND  backend;
+    HACHI_QUIRK  quirk;
+
     b32     close;
 
     unsigned char    mem[4096];  // 4kb memory:  4k = 4096
@@ -57,7 +60,8 @@ typedef struct
     unsigned char    vreg[16];   // 15 Variable Registers
     
     unsigned short int ireg;     // 16-bit index register called “I” which is used to point at locations in memory
-    unsigned short int *instack; // A stack for 16-bit addresses, which is used to call subroutines/functions and return from them
+    unsigned short int stack[2];
+    unsigned char  stackCursor; // A stack for 16-bit addresses, which is used to call subroutines/functions and return from them
     int  pc;           // A program counter, often called just “PC”, which points at the current instruction in memory
 
     hachiKeypad  k;
