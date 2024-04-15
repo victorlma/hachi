@@ -71,7 +71,8 @@ void decodeAndExec(unsigned short int ins)
             if (ins == 0x00E0) clearscreen();
             if (ins == 0x00EE) 
             {
-                Hachi.pc = Hachi.stack[Hachi.stackCursor--];
+                Hachi.pc = Hachi.stack[Hachi.stackCursor-1];
+                Hachi.stackCursor--;
             }
             break;
 
