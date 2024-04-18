@@ -11,12 +11,6 @@ CFILES=$(HEADERS:.h=.c)
 
 .PHONY: debug release docs clean downloadtestsuite
 
-debug: $(BINPATH)-debug
-	@gdb ./$<
-
-release: $(BINPATH)-release $(HEADERS) $(CFILES)
-	@./$<
-
 $(BINPATH)-debug: $(SRCDIR)/main.c $(HEADERS) $(CFILES)
 	mkdir -p $(BUILDIR)
 	$(CC) $(DFLAGS) -o $(BINPATH)-debug $< $(LIBS)
@@ -25,6 +19,13 @@ $(BINPATH)-debug: $(SRCDIR)/main.c $(HEADERS) $(CFILES)
 $(BINPATH)-release: $(SRCDIR)/main.c $(HEADERS) $(CFILES)
 	mkdir -p $(BUILDIR)
 	$(CC) $(RFLAGS) -o $(BINPATH)-release $< $(LIBS)
+
+debug: $(BINPATH)-debug
+	@gdb ./$<
+
+release: $(BINPATH)-release $(HEADERS) $(CFILES)
+	@./$<
+
 
 downloadtestsuite:
 	mkdir -p tst
