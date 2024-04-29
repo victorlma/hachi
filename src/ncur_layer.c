@@ -5,7 +5,7 @@
 ncurInfo NcurInfo = {0};
 
 void ncur_setupkeys()
-{ 
+{
     Hachi.k.b0.key = '1' ;
     Hachi.k.b1.key = '2' ;
     Hachi.k.b2.key = '3' ;
@@ -29,7 +29,7 @@ void ncur_setupscreen()
     initscr();
     NcurInfo.hascolor = has_colors();
     NcurInfo.blockUnicode = "@";
-    
+
     if (NcurInfo.hascolor)
     {
         start_color();
@@ -81,7 +81,7 @@ void ncur_draw()
                     {
                         color_set(COLOR_PAIR(1),WA_NORMAL);
                         mvaddstr(y,x,NcurInfo.blockUnicode);
-                        color_set(COLOR_PAIR(0),WA_NORMAL); 
+                        color_set(COLOR_PAIR(0),WA_NORMAL);
                     }
                     else
                     {
@@ -92,7 +92,7 @@ void ncur_draw()
             }
 
             ++c;
-            if (c > 7) 
+            if (c > 7)
             {
                 c=0;
                 ++y;
