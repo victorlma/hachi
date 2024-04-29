@@ -60,6 +60,11 @@ b32 checkScrSize()
     return TRUE;
 
 }
+void ncur_end()
+{
+    curs_set(1);
+    endwin();
+}
 void ncur_draw()
 {
     clear();

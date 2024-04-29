@@ -11,5 +11,6 @@ void ncur_setupkeys();
 void ncur_setupscreen();
 void ncur_clear();
 void ncur_draw();
+void ncur_end();
 
 #endif
