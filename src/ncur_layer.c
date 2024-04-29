@@ -1,7 +1,8 @@
 #include "ncurses.h"
 #include "ncur_layer.h"
 
-char *blockUnicode = "@";
+
+ncurInfo NcurInfo = {0};
 
 void ncur_setupkeys()
 { 
@@ -26,7 +27,19 @@ void ncur_setupkeys()
 void ncur_setupscreen()
 {
     initscr();
+    NcurInfo.hascolor = has_colors();
+    NcurInfo.blockUnicode = "@";
+    
+    if (NcurInfo.hascolor)
+    {
+        start_color();
+        init_pair(COLOR_PAIR(0), COLOR_WHITE, COLOR_BLACK);
+        init_pair(COLOR_PAIR(1), COLOR_BLACK, COLOR_WHITE);
+        NcurInfo.blockUnicode = " ";
+        use_default_colors();
+    }
 
+    curs_set(0);
 }
 
 b32 checkScrSize()
@@ -64,7 +77,16 @@ void ncur_draw()
             {
                 if (curbyte & (0x80 >> i))
                 {
-                    mvaddstr(y,x,blockUnicode);
+                    if (NcurInfo.hascolor)
+                    {
+                        color_set(COLOR_PAIR(1),WA_NORMAL);
+                        mvaddstr(y,x,NcurInfo.blockUnicode);
+                        color_set(COLOR_PAIR(0),WA_NORMAL); 
+                    }
+                    else
+                    {
+                        mvaddstr(y,x,NcurInfo.blockUnicode);
+                    }
                 }
                 ++x;
             }

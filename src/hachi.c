@@ -1,5 +1,6 @@
 #include "hachi.h"
 #include "ncur_layer.h"
+#include "ncurses.h"
 #include "x11_layer.h"
 
 hachiChip  Hachi = {0};
@@ -60,6 +61,7 @@ unsigned short int fetchIns()
 //    if (Hachi.pc > sizeof(Hachi.mem)) Hachi.pc = 512;
     return ins;
 }
+
 
 void decodeAndExec(unsigned short int ins)
 {
@@ -369,6 +371,7 @@ void setupscreen()
               break;
     }
 }
+
 void cleanup()
 {
     endwin();
