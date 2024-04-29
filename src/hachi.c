@@ -1,6 +1,5 @@
 #include "hachi.h"
 #include "ncur_layer.h"
-#include "ncurses.h"
 #include "x11_layer.h"
 
 hachiChip  Hachi = {0};
@@ -125,7 +124,7 @@ void decodeAndExec(unsigned short int ins)
 
         case 0x7000:
             {
-                char ind = 0 | ((ins & (0x0F00)) >> 8);
+                unsigned char ind = 0 | ((ins & (0x0F00)) >> 8);
                 Hachi.vreg[ind] += (ins & (0x00FF));
             }
             break;
@@ -200,7 +199,6 @@ void decodeAndExec(unsigned short int ins)
                         case SUPERCHIP:
                         {
                             unsigned char x = ((ins & (0x0F00)) >> 8);
-                            unsigned char y = ((ins & (0x00F0)) >> 4);
 
                             Hachi.vreg[15] = Hachi.vreg[x] & 1;
                             Hachi.vreg[x] >>= 1;
@@ -241,7 +239,6 @@ void decodeAndExec(unsigned short int ins)
                         case SUPERCHIP:
                         {
                             unsigned char x = ((ins & (0x0F00)) >> 8);
-                            unsigned char y = ((ins & (0x00F0)) >> 4);
 
                             Hachi.vreg[15] = Hachi.vreg[x] & 0x80;
                             Hachi.vreg[x] <<= 1;
@@ -281,8 +278,8 @@ void decodeAndExec(unsigned short int ins)
                 unsigned char inx = 0 | ((ins & (0x0F00)) >> 8);
                 unsigned char iny = 0 | ((ins & (0x00F0)) >> 4);
 
-                unsigned char x = Hachi.vreg[inx] & dpy_w-1;
-                unsigned char y = Hachi.vreg[iny] & dpy_h-1;
+                unsigned char x = (Hachi.vreg[inx] & (dpy_w-1));
+                unsigned char y = (Hachi.vreg[iny] & (dpy_h-1));
 
                 unsigned char sprsize = 0 | ((ins & (0x000F)));
 
@@ -327,6 +324,21 @@ void decodeAndExec(unsigned short int ins)
             break;
 
         case 0xF000:
+            switch (ins & 0x0FF)
+            {
+                case 0x001E:
+                    {
+                        unsigned char indx = ((ins & 0x0F00) >> 8);
+                        Hachi.ireg += Hachi.vreg[indx];
+                    }
+                    break;
+                case 0x0033:
+                    break;
+                case 0x0055:
+                    break;
+                case 0x0065:
+                    break;
+            }
             break;
     }
 }
@@ -374,5 +386,15 @@ void setupscreen()
 
 void cleanup()
 {
-    endwin();
+    switch (Hachi.backend)
+    {
+        case NCUR: ncur_end();
+            break;
+
+        case X11_GL:
+           break;
+
+
+        default: break;
+    }
 }
