@@ -21,7 +21,7 @@ $(BINPATH)-release: $(SRCDIR)/main.c $(HEADERS) $(CFILES)
 	$(CC) $(RFLAGS) -o $(BINPATH)-release $< $(LIBS)
 
 debug: $(BINPATH)-debug
-	@gdb ./$<
+	@gdb -q ./$<
 
 release: $(BINPATH)-release $(HEADERS) $(CFILES)
 	@./$<
