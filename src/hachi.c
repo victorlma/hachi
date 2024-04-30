@@ -177,7 +177,7 @@ void decodeAndExec(unsigned short int ins)
 
                         unsigned char tmp = Hachi.vreg[x];
                         Hachi.vreg[x] -= Hachi.vreg[y];
-                        Hachi.vreg[15] =  tmp > Hachi.vreg[y] ? 1 : 0;
+                        Hachi.vreg[15] =  tmp >= Hachi.vreg[y] ? 1 : 0;
 
                     }
                     break;
@@ -190,8 +190,9 @@ void decodeAndExec(unsigned short int ins)
                             unsigned char y = ((ins & (0x00F0)) >> 4);
 
                             Hachi.vreg[x] = Hachi.vreg[y];
-                            Hachi.vreg[15] = Hachi.vreg[x] & 1;
+                            unsigned char tmpcarry  = Hachi.vreg[x] & 1;
                             Hachi.vreg[x] >>= 1;
+                            Hachi.vreg[15] = tmpcarry;
 
                         }
                             break;
@@ -200,8 +201,9 @@ void decodeAndExec(unsigned short int ins)
                         {
                             unsigned char x = ((ins & (0x0F00)) >> 8);
 
-                            Hachi.vreg[15] = Hachi.vreg[x] & 1;
+                            unsigned char tmpcarry  = Hachi.vreg[x] & 1;
                             Hachi.vreg[x] >>= 1;
+                            Hachi.vreg[15] = tmpcarry;
 
                         }
                             break;
@@ -230,8 +232,9 @@ void decodeAndExec(unsigned short int ins)
                             unsigned char y = ((ins & (0x00F0)) >> 4);
 
                             Hachi.vreg[x] = Hachi.vreg[y];
-                            Hachi.vreg[15] = Hachi.vreg[x] & 0x80;
+                            unsigned char tmpcarry  = Hachi.vreg[x] >> 7;
                             Hachi.vreg[x] <<= 1;
+                            Hachi.vreg[15] = tmpcarry;
 
                         }
                             break;
@@ -240,8 +243,9 @@ void decodeAndExec(unsigned short int ins)
                         {
                             unsigned char x = ((ins & (0x0F00)) >> 8);
 
-                            Hachi.vreg[15] = Hachi.vreg[x] & 0x80;
+                            unsigned char tmpcarry  = Hachi.vreg[x] >> 7;
                             Hachi.vreg[x] <<= 1;
+                            Hachi.vreg[15] = tmpcarry;
 
                         }
                             break;
@@ -324,7 +328,7 @@ void decodeAndExec(unsigned short int ins)
             break;
 
         case 0xF000:
-            switch (ins & 0x0FF)
+            switch (ins & 0x00FF)
             {
                 case 0x001E:
                     {
@@ -333,10 +337,36 @@ void decodeAndExec(unsigned short int ins)
                     }
                     break;
                 case 0x0033:
+                    {
+                        unsigned char indx = ((ins & 0x0F00) >> 8);
+
+                        Hachi.mem[Hachi.ireg] = Hachi.vreg[indx] / 100;
+                        Hachi.mem[Hachi.ireg+1] = (Hachi.vreg[indx] % 100)  / 10;
+                        Hachi.mem[Hachi.ireg+2] = (Hachi.vreg[indx] % 100) % 10;
+                    }
                     break;
+
                 case 0x0055:
+                    {
+                        unsigned char indx = ((ins & 0x0F00) >> 8);
+
+                        for (int i=0; i <= indx; ++i)
+                        {
+                            Hachi.mem[Hachi.ireg+i] = Hachi.vreg[i];
+                        }
+
+                    }
                     break;
                 case 0x0065:
+                    {
+                        unsigned char indx = ((ins & 0x0F00) >> 8);
+
+                        for (int i=0; i <= indx; ++i)
+                        {
+                            Hachi.vreg[i] = Hachi.mem[Hachi.ireg+i];
+                        }
+
+                    }
                     break;
             }
             break;
