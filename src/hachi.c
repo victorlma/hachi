@@ -414,6 +414,34 @@ void setupscreen()
     }
 }
 
+void handleInput()
+{
+
+    switch (Hachi.backend)
+    {
+        case NCUR: ncur_handleInput();
+            break;
+
+        case X11_GL:
+           break;
+
+        default: break;
+    }
+}
+
+void handleResize()
+{
+    switch (Hachi.backend)
+    {
+        case NCUR: ncur_handleResize();
+            break;
+
+        case X11_GL:
+           break;
+
+        default: break;
+    }
+}
 void cleanup()
 {
     switch (Hachi.backend)
@@ -423,7 +451,6 @@ void cleanup()
 
         case X11_GL:
            break;
-
 
         default: break;
     }

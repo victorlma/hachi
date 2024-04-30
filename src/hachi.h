@@ -27,27 +27,6 @@ typedef struct
 
 typedef struct
 {
-    hachiBtn  b0;
-    hachiBtn  b1;
-    hachiBtn  b2;
-    hachiBtn  b3;
-    hachiBtn  b4;
-    hachiBtn  b5;
-    hachiBtn  b6;
-    hachiBtn  b7;
-    hachiBtn  b8;
-    hachiBtn  b9;
-    hachiBtn  ba;
-    hachiBtn  bb;
-    hachiBtn  bc;
-    hachiBtn  bd;
-    hachiBtn  be;
-    hachiBtn  bf;
-
-} hachiKeypad;
-
-typedef struct
-{
     HACHI_BACKEND  backend;
     HACHI_QUIRK  quirk;
 
@@ -64,7 +43,7 @@ typedef struct
     unsigned char  stackCursor; // A stack for 16-bit addresses, which is used to call subroutines/functions and return from them
     int  pc;           // A program counter, often called just “PC”, which points at the current instruction in memory
 
-    hachiKeypad  k;
+    hachiBtn    keys[16];
 
 } hachiChip;
 
@@ -77,7 +56,8 @@ void decodeAndExec(unsigned short int ins);
 void clearscreen();
 void drawscreen();
 void setupscreen();
-
+void handleInput();
+void handleResize();
 
 
 #endif

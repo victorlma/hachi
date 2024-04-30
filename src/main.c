@@ -41,6 +41,8 @@ int main(int argc, char **argv)
 
     while (!Hachi.close) {
 
+        handleInput();
+        handleResize();
         decodeAndExec(fetchIns());
     }
 
