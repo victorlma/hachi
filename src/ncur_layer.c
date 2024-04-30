@@ -1,4 +1,5 @@
 #include "ncurses.h"
+//  #include "linux/input.h"    TODO:  Better lower level input
 #include "ncur_layer.h"
 
 ncurInfo NcurInfo = {0};
@@ -26,9 +27,10 @@ void ncur_setupkeys()
 void ncur_setupscreen()
 {
     initscr();
-    cbreak();
+    raw();
     noecho();
-    nodelay(stdscr, TRUE);
+    nodelay(stdscr,1);
+
     NcurInfo.hascolor = has_colors();
     NcurInfo.blockUnicode = "@";
 
@@ -68,7 +70,11 @@ b32 charInArr(char ch, char arr[], int size)
 
     for (int i = 0; i < size; ++i)
     {
-        if (ch == arr[i]) is = TRUE;
+        if (ch == arr[i])
+        {
+            is = TRUE;
+            break;
+        }
     }
 
     return is;
@@ -80,7 +86,11 @@ b32 charIsKey(char ch)
 
     for (int i = 0; i < 16; ++i)
     {
-        if (ch == Hachi.keys[i].key) is = TRUE;
+        if (ch == Hachi.keys[i].key)
+        {
+            is = TRUE;
+            break;
+        }
     }
 
     return is;
@@ -110,6 +120,11 @@ void ncur_handleInput()
     for (int i = 0; i < 16; ++i)
     {
         NcurInfo.ch = getch();
+        usleep(1);
+
+        mvaddstr(1,0,"CH:");
+        mvaddch(1,3,NcurInfo.ch);
+        refresh();
 
         if (NcurInfo.ch == 27)
         {
@@ -123,9 +138,10 @@ void ncur_handleInput()
             if (charInArr(NcurInfo.ch, NcurInfo.charr, i+1))
             {
                 NcurInfo.ch = ERR;
+                continue;
             }
 
-            if (NcurInfo.ch != ERR) NcurInfo.charr[i] = NcurInfo.ch;
+            NcurInfo.charr[i] = NcurInfo.ch;
         }
         
     }
@@ -134,6 +150,16 @@ void ncur_handleInput()
     {
         Hachi.keys[i].state = charInArr(Hachi.keys[i].key, NcurInfo.charr, 16) ? TRUE : FALSE;
     }
+
+    mvaddstr(0,0,"K1:");
+    char st = Hachi.keys[0].state == TRUE ? '1' : '0';
+    mvaddch(0,3,st);
+    mvaddstr(0,5,"K2:");
+    st = Hachi.keys[1].state == TRUE ? '1' : '0';
+    mvaddch(0,9,st);
+    refresh();
+
+
 }
 
 void ncur_end()

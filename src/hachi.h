@@ -43,6 +43,8 @@ typedef struct
     unsigned char  stackCursor; // A stack for 16-bit addresses, which is used to call subroutines/functions and return from them
     int  pc;           // A program counter, often called just “PC”, which points at the current instruction in memory
 
+    int     insPerFrame;
+
     hachiBtn    keys[16];
 
 } hachiChip;
