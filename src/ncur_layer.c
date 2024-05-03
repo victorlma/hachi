@@ -1,33 +1,33 @@
 #include "ncurses.h"
-//  #include "linux/input.h"    TODO:  Better lower level input
 #include "ncur_layer.h"
 
 ncurInfo NcurInfo = {0};
 
 void ncur_setupkeys()
 {
-    Hachi.keys[0].key = '1' ;
-    Hachi.keys[1].key = '2' ;
-    Hachi.keys[2].key = '3' ;
-    Hachi.keys[3].key = '4' ;
-    Hachi.keys[4].key = 'q' ;
-    Hachi.keys[5].key = 'w' ;
-    Hachi.keys[6].key = 'e' ;
-    Hachi.keys[7].key = 'r' ;
-    Hachi.keys[8].key = 'a' ;
-    Hachi.keys[9].key = 's' ;
-    Hachi.keys[10].key = 'd' ;
-    Hachi.keys[11].key = 'f' ;
-    Hachi.keys[12].key = 'z' ;
-    Hachi.keys[13].key = 'x' ;
-    Hachi.keys[14].key = 'c' ;
-    Hachi.keys[15].key = 'v' ;
+
+    Hachi.kmap[0] = '1';
+    Hachi.kmap[1] = '2';
+    Hachi.kmap[2] = '3';
+    Hachi.kmap[3] = '4';
+    Hachi.kmap[4] = 'q';
+    Hachi.kmap[5] = 'w';
+    Hachi.kmap[6] = 'e';
+    Hachi.kmap[7] = 'r';
+    Hachi.kmap[8] = 'a';
+    Hachi.kmap[9] = 's';
+    Hachi.kmap[10] = 'd';
+    Hachi.kmap[11] = 'f';
+    Hachi.kmap[12] = 'z';
+    Hachi.kmap[13] = 'x';
+    Hachi.kmap[14] = 'c';
+    Hachi.kmap[15] = 'v';
 }
 
 void ncur_setupscreen()
 {
     initscr();
-    raw();
+    cbreak();
     noecho();
     nodelay(stdscr,1);
 
@@ -64,37 +64,7 @@ b32 checkScrSize()
 
 }
 
-b32 charInArr(char ch, char arr[], int size)
-{
-    b32 is = FALSE;
 
-    for (int i = 0; i < size; ++i)
-    {
-        if (ch == arr[i])
-        {
-            is = TRUE;
-            break;
-        }
-    }
-
-    return is;
-}
-
-b32 charIsKey(char ch)
-{
-    b32 is = FALSE;
-
-    for (int i = 0; i < 16; ++i)
-    {
-        if (ch == Hachi.keys[i].key)
-        {
-            is = TRUE;
-            break;
-        }
-    }
-
-    return is;
-}
 
 void ncur_handleResize()
 {
@@ -109,61 +79,46 @@ void ncur_handleResize()
     }
 
 }
+
 void ncur_handleInput()
 {
-    for (int i = 0; i < 16; ++i)
+
+    char ch = getch();
+
+    if (ch == 27) Hachi.close = TRUE;
+
+    if (ch == Hachi.kmap[0]) Hachi.keys[0].timeout = 8 * Hachi.insPerFrame;
+    if (ch == Hachi.kmap[1]) Hachi.keys[1].timeout = 8 * Hachi.insPerFrame;
+    if (ch == Hachi.kmap[2]) Hachi.keys[2].timeout = 8 * Hachi.insPerFrame;
+    if (ch == Hachi.kmap[3]) Hachi.keys[3].timeout = 8 * Hachi.insPerFrame;
+    if (ch == Hachi.kmap[4]) Hachi.keys[4].timeout = 8 * Hachi.insPerFrame;
+    if (ch == Hachi.kmap[5]) Hachi.keys[5].timeout = 8 * Hachi.insPerFrame;
+    if (ch == Hachi.kmap[6]) Hachi.keys[6].timeout = 8 * Hachi.insPerFrame;
+    if (ch == Hachi.kmap[7]) Hachi.keys[7].timeout = 8 * Hachi.insPerFrame;
+    if (ch == Hachi.kmap[8]) Hachi.keys[8].timeout = 8 * Hachi.insPerFrame;
+    if (ch == Hachi.kmap[9]) Hachi.keys[9].timeout = 8 * Hachi.insPerFrame;
+    if (ch == Hachi.kmap[10]) Hachi.keys[10].timeout = 8 * Hachi.insPerFrame;
+    if (ch == Hachi.kmap[11]) Hachi.keys[11].timeout = 8 * Hachi.insPerFrame;
+    if (ch == Hachi.kmap[12]) Hachi.keys[12].timeout = 8 * Hachi.insPerFrame;
+    if (ch == Hachi.kmap[13]) Hachi.keys[13].timeout = 8 * Hachi.insPerFrame;
+    if (ch == Hachi.kmap[14]) Hachi.keys[14].timeout = 8 * Hachi.insPerFrame;
+    if (ch == Hachi.kmap[15]) Hachi.keys[15].timeout = 8 * Hachi.insPerFrame;
+
+    for (int i=0; i < 16; ++i)
     {
-        NcurInfo.charr[i] = 0;
+        if (Hachi.keys[i].timeout > 0 && ch == ERR) --Hachi.keys[i].timeout;
 
+        Hachi.keys[i].state = Hachi.keys[i].timeout > 0;
+
+        mvprintw(0 + i,0, "K%d st: %d", i, Hachi.keys[i].state);
+            mvprintw((20 + i),0, "K%d t: %d", i, Hachi.keys[i].timeout);
     }
-
-    for (int i = 0; i < 16; ++i)
-    {
-        NcurInfo.ch = getch();
-        usleep(1);
-
-        mvaddstr(1,0,"CH:");
-        mvaddch(1,3,NcurInfo.ch);
-        refresh();
-
-        if (NcurInfo.ch == 27)
-        {
-            Hachi.close = TRUE;
-            return;
-        }
-        
-        if (charIsKey(NcurInfo.ch))
-        {
-        
-            if (charInArr(NcurInfo.ch, NcurInfo.charr, i+1))
-            {
-                NcurInfo.ch = ERR;
-                continue;
-            }
-
-            NcurInfo.charr[i] = NcurInfo.ch;
-        }
-        
-    }
-
-    for (int i = 0; i < 16; ++i)
-    {
-        Hachi.keys[i].state = charInArr(Hachi.keys[i].key, NcurInfo.charr, 16) ? TRUE : FALSE;
-    }
-
-    mvaddstr(0,0,"K1:");
-    char st = Hachi.keys[0].state == TRUE ? '1' : '0';
-    mvaddch(0,3,st);
-    mvaddstr(0,5,"K2:");
-    st = Hachi.keys[1].state == TRUE ? '1' : '0';
-    mvaddch(0,9,st);
-    refresh();
-
 
 }
 
 void ncur_end()
 {
+    echo();
     curs_set(1);
     endwin();
 }

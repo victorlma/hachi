@@ -21,7 +21,7 @@ typedef struct
 
 typedef struct
 {
-    unsigned long key;
+    int timeout;
     b32 state;
 } hachiBtn;
 
@@ -45,6 +45,7 @@ typedef struct
 
     int     insPerFrame;
 
+    char        kmap[16];
     hachiBtn    keys[16];
 
 } hachiChip;
