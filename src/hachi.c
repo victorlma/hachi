@@ -29,7 +29,7 @@ void setuphachi()
     // Copy Font data from FONT_TABLE to Hachi MEM
 
     Hachi.backend = NCUR;
-    Hachi.insPerFrame = 5;
+    Hachi.insPerFrame = 50;
     int FontStAdr = 0x50;
     int FontEnAdr = 0x9F;
     int c = 0;
@@ -53,6 +53,12 @@ void setuphachi()
         default: break;
     }
     Hachi.pc = 512;
+
+    for (int i=0; i < 16; ++i)
+    {
+        Hachi.keys[i].timeout = 0;
+        Hachi.keys[i].state = 0;
+    }
 }
 
 unsigned short int fetchIns()
@@ -77,7 +83,6 @@ void decodeAndExec(unsigned short int ins)
                 Hachi.stackCursor--;
             }
             break;
-
         case 0x1000:
             Hachi.pc = (ins & (0x0FFF));
             break;
@@ -273,9 +278,15 @@ void decodeAndExec(unsigned short int ins)
             break;
 
         case 0xB000:
+            {
+                Hachi.pc = (0 | (ins & 0xFFF)) + Hachi.vreg[0];
+            }
             break;
 
         case 0xC000:
+            {
+                mvprintw(15,15,"CXNN NOT IMPLEMENTED");
+            }
             break;
 
         case 0xD000:
@@ -326,15 +337,61 @@ void decodeAndExec(unsigned short int ins)
             break;
 
         case 0xE000:
+            switch (ins & 0x00FF)
+            {
+                case 0x009E:
+                {
+                        unsigned char indx = 0 | ((ins & 0x0F00) >> 8);
+                        unsigned char k = Hachi.vreg[indx] & 0x0F;
+
+                        if (Hachi.keys[k].state) Hachi.pc += 2;
+                }
+                break;
+                case 0x00A1:
+                {
+                        unsigned char indx = (ins & 0x0F00) >> 8;
+                        unsigned char k = Hachi.vreg[indx] & 0x0F;
+
+                        if (!Hachi.keys[k].state) Hachi.pc += 2;
+                }
+                break;
+            }
             break;
 
         case 0xF000:
             switch (ins & 0x00FF)
             {
+                case 0x0007:
+                    {
+                        mvprintw(15,15,"Fx07 NOT IMPLEMENTED");
+
+                    }
+                    break;
+                case 0x000A:
+                    {
+                        mvprintw(15,15,"Fx0A NOT IMPLEMENTED");
+
+                    }
+                    break;
+                case 0x0015:
+                    {
+                        mvprintw(15,15,"Fx15 NOT IMPLEMENTED");
+                    }
+                        break;
+                case 0x0018:
+                    {
+                        mvprintw(15,15,"Fx18 NOT IMPLEMENTED");
+                    }
+                    break;
                 case 0x001E:
                     {
                         unsigned char indx = ((ins & 0x0F00) >> 8);
                         Hachi.ireg += Hachi.vreg[indx];
+                    }
+                    break;
+                case 0x0029:
+                    {
+                        mvprintw(15,15,"Fx29 NOT IMPLEMENTED");
                     }
                     break;
                 case 0x0033:

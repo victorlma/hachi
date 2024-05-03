@@ -1,4 +1,4 @@
-#define _POSIX_C_SOURCE 199309L
+#define _POSIX_C_SOURCE 199309L 
 #include "locale.h"
 #include "stdio.h"
 #include "stdlib.h"
@@ -53,20 +53,21 @@ int main(int argc, char **argv)
     setuphachi();
 
 
+    clock_t clk = clock();
     while (!Hachi.close) {
-        clock_t clk = clock();
+
 
         handleInput();
         handleResize();
-
         decodeAndExec(fetchIns());
+        execIns++;
 
 
         clk = clock() - clk;
 
         float ms = (float) clk/CLOCKS_PER_SEC;
         
-        if (ms < target && ++execIns >= Hachi.insPerFrame)
+        if (ms < target && execIns >= Hachi.insPerFrame)
         {
             tspec.tv_sec = 0;
             tspec.tv_nsec = (target - ms) * 1000000000L;
