@@ -29,7 +29,7 @@ void setuphachi()
     // Copy Font data from FONT_TABLE to Hachi MEM
 
     Hachi.backend = NCUR;
-    Hachi.insPerFrame = 50;
+    Hachi.insPerFrame = 500;
     int FontStAdr = 0x50;
     int FontEnAdr = 0x9F;
     int c = 0;

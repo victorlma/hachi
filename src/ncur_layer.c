@@ -106,7 +106,7 @@ void ncur_handleInput()
 
     for (int i=0; i < 16; ++i)
     {
-        if (Hachi.keys[i].timeout > 0 && ch == ERR) --Hachi.keys[i].timeout;
+        if (Hachi.keys[i].timeout > 0 ) --Hachi.keys[i].timeout;
 
         Hachi.keys[i].state = Hachi.keys[i].timeout > 0;
 

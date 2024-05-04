@@ -30,16 +30,14 @@ int main(int argc, char **argv)
 
     fseek(fp, 0L, SEEK_SET);
 
-    int offset = 0;
     int execIns = 0;
 
     for (int i=0; i < filesize; ++i)
     {
         unsigned char bf[2];
         fread(bf, sizeof(unsigned char), 2, fp);
-        Hachi.mem[512+offset++] = bf[0];
-        Hachi.mem[512+offset++] = bf[1];
-        
+        Hachi.mem[512+i++] = bf[0];
+        Hachi.mem[512+i] = bf[1];
 
     }
     
