@@ -43,6 +43,7 @@ typedef struct
     int  pc;           // A program counter, often called just “PC”, which points at the current instruction in memory
 
     int     insPerFrame;
+    int         fps;
 
     char        kmap[16];
     hachiBtn    keys[16];

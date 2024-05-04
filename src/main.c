@@ -42,13 +42,12 @@ int main(int argc, char **argv)
     }
     
     
+    setuphachi();
 
-    float fps = 60;
-    float target = 1.0f/fps;
+    float target = 1.0f/Hachi.fps;
 
     struct timespec tspec = {0};
 
-    setuphachi();
 
 
     clock_t clk = clock();

@@ -87,22 +87,22 @@ void ncur_handleInput()
 
     if (ch == 27) Hachi.close = TRUE;
 
-    if (ch == Hachi.kmap[0]) Hachi.keys[0].timeout = Hachi.insPerFrame + 5;
-    if (ch == Hachi.kmap[1]) Hachi.keys[1].timeout = Hachi.insPerFrame + 5;
-    if (ch == Hachi.kmap[2]) Hachi.keys[2].timeout = Hachi.insPerFrame + 5;
-    if (ch == Hachi.kmap[3]) Hachi.keys[3].timeout = Hachi.insPerFrame + 5;
-    if (ch == Hachi.kmap[4]) Hachi.keys[4].timeout = Hachi.insPerFrame + 5;
-    if (ch == Hachi.kmap[5]) Hachi.keys[5].timeout = Hachi.insPerFrame + 5;
-    if (ch == Hachi.kmap[6]) Hachi.keys[6].timeout = Hachi.insPerFrame + 5;
-    if (ch == Hachi.kmap[7]) Hachi.keys[7].timeout = Hachi.insPerFrame + 5;
-    if (ch == Hachi.kmap[8]) Hachi.keys[8].timeout = Hachi.insPerFrame + 5;
-    if (ch == Hachi.kmap[9]) Hachi.keys[9].timeout = Hachi.insPerFrame + 5;
-    if (ch == Hachi.kmap[10]) Hachi.keys[10].timeout = Hachi.insPerFrame + 5;
-    if (ch == Hachi.kmap[11]) Hachi.keys[11].timeout = Hachi.insPerFrame + 5;
-    if (ch == Hachi.kmap[12]) Hachi.keys[12].timeout = Hachi.insPerFrame + 5;
-    if (ch == Hachi.kmap[13]) Hachi.keys[13].timeout = Hachi.insPerFrame + 5;
-    if (ch == Hachi.kmap[14]) Hachi.keys[14].timeout = Hachi.insPerFrame + 5;
-    if (ch == Hachi.kmap[15]) Hachi.keys[15].timeout = Hachi.insPerFrame + 5;
+    if (ch == Hachi.kmap[0]) Hachi.keys[0].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
+    if (ch == Hachi.kmap[1]) Hachi.keys[1].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame;  
+    if (ch == Hachi.kmap[2]) Hachi.keys[2].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
+    if (ch == Hachi.kmap[3]) Hachi.keys[3].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
+    if (ch == Hachi.kmap[4]) Hachi.keys[4].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
+    if (ch == Hachi.kmap[5]) Hachi.keys[5].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
+    if (ch == Hachi.kmap[6]) Hachi.keys[6].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
+    if (ch == Hachi.kmap[7]) Hachi.keys[7].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
+    if (ch == Hachi.kmap[8]) Hachi.keys[8].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
+    if (ch == Hachi.kmap[9]) Hachi.keys[9].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
+    if (ch == Hachi.kmap[10]) Hachi.keys[10].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
+    if (ch == Hachi.kmap[11]) Hachi.keys[11].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
+    if (ch == Hachi.kmap[12]) Hachi.keys[12].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
+    if (ch == Hachi.kmap[13]) Hachi.keys[13].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
+    if (ch == Hachi.kmap[14]) Hachi.keys[14].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
+    if (ch == Hachi.kmap[15]) Hachi.keys[15].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
 
     for (int i=0; i < 16; ++i)
     {
