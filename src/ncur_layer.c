@@ -84,31 +84,23 @@ void ncur_handleInput()
 {
 
     char ch = getch();
+    while (getch() != EOF) ;
 
     if (ch == 27) Hachi.close = TRUE;
 
-    if (ch == Hachi.kmap[0]) Hachi.keys[0].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
-    if (ch == Hachi.kmap[1]) Hachi.keys[1].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame;  
-    if (ch == Hachi.kmap[2]) Hachi.keys[2].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
-    if (ch == Hachi.kmap[3]) Hachi.keys[3].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
-    if (ch == Hachi.kmap[4]) Hachi.keys[4].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
-    if (ch == Hachi.kmap[5]) Hachi.keys[5].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
-    if (ch == Hachi.kmap[6]) Hachi.keys[6].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
-    if (ch == Hachi.kmap[7]) Hachi.keys[7].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
-    if (ch == Hachi.kmap[8]) Hachi.keys[8].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
-    if (ch == Hachi.kmap[9]) Hachi.keys[9].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
-    if (ch == Hachi.kmap[10]) Hachi.keys[10].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
-    if (ch == Hachi.kmap[11]) Hachi.keys[11].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
-    if (ch == Hachi.kmap[12]) Hachi.keys[12].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
-    if (ch == Hachi.kmap[13]) Hachi.keys[13].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
-    if (ch == Hachi.kmap[14]) Hachi.keys[14].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
-    if (ch == Hachi.kmap[15]) Hachi.keys[15].timeout = (Hachi.fps * 2 ) + Hachi.insPerFrame; 
-
     for (int i=0; i < 16; ++i)
     {
-        if (Hachi.keys[i].timeout > 0 ) --Hachi.keys[i].timeout;
 
-        Hachi.keys[i].state = Hachi.keys[i].timeout > 0;
+        ch == Hachi.kmap[i] ? Hachi.keys[i].timeout = 10 : FALSE;
+        if (Hachi.keys[i].timeout > 0)
+        {
+         --Hachi.keys[i].timeout;
+         Hachi.keys[i].state = TRUE;
+        }
+        else 
+        {
+         Hachi.keys[i].state = 0;
+        }
 
         mvprintw(0 + i,0, "K%d st: %d", i, Hachi.keys[i].state);
         mvprintw((20 + i),0, "K%d t: %d", i, Hachi.keys[i].timeout);
