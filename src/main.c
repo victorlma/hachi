@@ -51,28 +51,40 @@ int main(int argc, char **argv)
 
 
     clock_t clk = clock();
+    float ms = 0;
     while (!Hachi.close) {
 
 
         handleInput();
-        handleResize();
-        decodeAndExec(fetchIns());
-        execIns++;
+        clock_t clkacc = 0;
+        while (execIns < Hachi.insPerFrame)
+        {
+            handleResize();
+            decodeAndExec(fetchIns());
+            execIns++;
 
 
-        clk = clock() - clk;
 
-        float ms = (float) clk/CLOCKS_PER_SEC;
-        
-        if (ms < target && execIns >= Hachi.insPerFrame)
+            clk = clock() - clk;
+
+            clkacc += clk;
+            ms = (float) clkacc/CLOCKS_PER_SEC;
+            if (ms >= target) break;
+
+            clk = clock();
+        }
+
+        if (ms < target)
         {
             tspec.tv_sec = 0;
             tspec.tv_nsec = (target - ms) * 1000000000L;
-            execIns = 0;
 
             nanosleep(&tspec, &tspec);
         }
 
+        if (Hachi.dtim > 0) --Hachi.dtim;
+        if (Hachi.stim > 0) --Hachi.stim;
+        execIns = 0;
 
         clk = clock();
 
