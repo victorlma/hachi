@@ -29,7 +29,7 @@ void setuphachi()
     // Copy Font data from FONT_TABLE to Hachi MEM
 
     Hachi.backend = NCUR;
-    Hachi.insPerFrame = 200;
+    Hachi.insPerFrame = 20;
     Hachi.fps = 60;
     int FontStAdr = 0x50;
     int FontEnAdr = 0x9F;
@@ -286,7 +286,10 @@ void decodeAndExec(unsigned short int ins)
 
         case 0xC000:
             {
-                mvprintw(15,15,"CXNN NOT IMPLEMENTED");
+                int rnd = rand();
+                unsigned char indx = ((ins & 0x0F00) >> 8);
+                unsigned char nn = ((ins & 0x00FF));
+                Hachi.vreg[indx] = (nn & rnd);
             }
             break;
 
@@ -372,7 +375,19 @@ void decodeAndExec(unsigned short int ins)
                     break;
                 case 0x000A:
                     {
-                        mvprintw(15,15,"Fx0A NOT IMPLEMENTED");
+                        Hachi.pc--;
+                        Hachi.pc--;
+
+                        b32 pressed = 0;
+
+
+                        for (int i=0; i < 16; ++i)
+                        {
+                            Hachi.keys[1].state == TRUE ? pressed++ : FALSE;
+                        }
+
+                        if (pressed > 0) Hachi.pc += 2; 
+
 
                     }
                     break;
@@ -396,7 +411,8 @@ void decodeAndExec(unsigned short int ins)
                     break;
                 case 0x0029:
                     {
-                        mvprintw(15,15,"Fx29 NOT IMPLEMENTED");
+                        unsigned char indx = ((ins & 0x0F00) >> 8);
+                        Hachi.ireg =  indx*5;
                     }
                     break;
                 case 0x0033:
