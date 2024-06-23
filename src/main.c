@@ -20,6 +20,7 @@
 
 int main(int argc, char **argv)
 {
+    srand(time(NULL));
 
     if (argc < 2) return 1;
 
@@ -55,10 +56,10 @@ int main(int argc, char **argv)
     while (!Hachi.close) {
 
 
-        handleInput();
         clock_t clkacc = 0;
         while (execIns < Hachi.insPerFrame)
         {
+            handleInput();
             handleResize();
             decodeAndExec(fetchIns());
             execIns++;
